@@ -1,0 +1,62 @@
+/* CSS Reset */
+* {
+	padding: 0px;
+	margin: 0px;
+}
+
+html, body {width: 100%;}
+body {
+	font-family: arial;
+	//background: url('img/bg.png');
+}
+#content {
+	width: 70%;
+	height: 100%;
+	float: left;
+}
+
+#sidebar {
+	width: 30%;
+	height: 100%;
+	float: left;
+}
+
+#checkin {
+
+}
+
+#challenge {
+	display: none;	
+}
+
+#challenge-title, #sidebar-title {
+	background: red;
+	font-size: 24px;
+	height: 60px;
+	line-height: 60px;
+	background-color: #666;
+	color: #eee;
+}
+
+#challenge-title span {
+	background-color: red;
+	display: inline-block;
+	padding: 0px 30px;
+}
+
+#challenge-content {
+	padding: 1%;
+}
+
+#description {
+	width: 48%;
+	padding: 1%;
+	float: left;
+}
+
+#videoPlayer {
+	width: 48%;
+	padding: 1%;
+	float: left;	
+}
+
