@@ -1,5 +1,5 @@
 //Global app varibale
-var api_url         = "http://145.89.96.87:8000/";
+var api_url         = "http://145.89.96.50:8000/";
 var score_item_count= 0;
 var challenge_id    = null;
 var user_playing    = null;
@@ -90,6 +90,28 @@ function displayCheckin(){
 function displayChallenge(){
   var checkinDiv    = document.getElementById("checkin");
   var challengeDiv  = document.getElementById("challenge");
+  var challenge     = user_playing.level;
+
+  replaceHtmlElement("content-title", user_playing.username);
+  replaceHtmlElement("challenge-title", "<span>"+challenge.order+"</span> "+challenge.title);
+  replaceHtmlElement("description-text", challenge.description);
+  
+  var html = "";
+  for (var i = 0; i < challenge.topScores.length; i++) {
+   challenge.topScores[i];
+   html += "<div><span>"+challenge.topScores[i].username+"</span> "+challenge.topScores[i].score+"</div>";
+  };
+  replaceHtmlElement("topScores-text", html);
+
+  //play video
+  // var videoMp4 = document.getElementById("videoMp4");
+  // videoMp4.src = videos[movie].mp4Url;
+  // var videoOgg = document.getElementById("videoOgg");
+  // videoOgg.src = videos[movie].oggUrl;
+  // var video = document.getElementById("videoPlayer");
+  // video.load();
+  // video.play();
+
   checkinDiv.style.display = "none";
   challengeDiv.style.display = "block";
 }
@@ -121,6 +143,16 @@ function cleanOldScoreSidebar(){
     sidebarContent.removeChild( sidebarContent.childNodes[ sidebarContent.childNodes.length - 1 ] );
     score_item_count--; 
   }
+}
+
+// Function for changing the innerHTML of element
+function replaceHtmlElement(id, html){
+  var node = document.getElementById(id);
+  if (node != null) {
+    node.innerHTML = html;
+    return true;
+  }
+  return false;
 }
 
 // Ajax class

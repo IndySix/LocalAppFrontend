@@ -21,15 +21,23 @@
 			<div id="content-title">Username</div>
 			<div id="challenge-title"><span>1</span> Challenge titel</div>
 			<div id="challenge-content">
-				
-				<p id="description">
+			
+			<div id="description">
+				<p id="description-text">
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempor arcu vitae cursus mollis. Nam interdum interdum nisl, a dapibus ante pellentesque non. Duis interdum gravida mi eu ultricies. Cras molestie sem et lorem viverra auctor. Ut congue felis elit, non imperdiet justo viverra in. Mauris tincidunt eros vel orci ullamcorper cursus. In condimentum lacus id tellus feugiat, et luctus arcu porta. Morbi sit amet luctus neque. Sed porta, dolor ac euismod iaculis, dui orci iaculis magna, et tempor eros velit eget est. Ut aliquet lorem nec ante malesuada, sit amet gravida metus consequat.
-			</p>
-			<video id="videoPlayer" controls>
-  				<source id="videoMp4" src="" type="video/mp4">
-  				<source id="videoOgg" src="" type="video/ogg">
- 				HTML video tag is not supported in your browser!
-			</video>
+				</p>
+					<video id="videoPlayer" controls>
+  					<source id="videoMp4" src="" type="video/mp4">
+  					<source id="videoOgg" src="" type="video/ogg">
+ 					HTML video tag is not supported in your browser!
+				</video>
+			</div>	
+			
+			<div id="topScores">
+				<h3>Top scores</h3>
+				<div id="topScores-text"></div>
+			</div>
+			
 			</div>
 		</div>
 <!-- End Challenge -->
@@ -46,6 +54,6 @@
 </body>
 </html>
 <script type="text/javascript">
-	displayChallenge();
+	//displayChallenge();
 	addScoreToSidebar(1, 'Krukas', 520);
 </script>
