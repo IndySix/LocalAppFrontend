@@ -29,13 +29,20 @@ body {
 	display: none;	
 }
 
-#challenge-title, #sidebar-title {
+#content-title, #sidebar-title {
 	background: red;
 	font-size: 24px;
 	height: 60px;
 	line-height: 60px;
 	background-color: #666;
 	color: #eee;
+	padding-left: 20px;
+}
+
+#challenge-title {
+	height: 60px;
+	line-height: 60px;
+	background-color: #efefef;
 }
 
 #challenge-title span {
@@ -58,5 +65,10 @@ body {
 	width: 48%;
 	padding: 1%;
 	float: left;	
+}
+
+#sidebar-content {
+	height: 100%;
+	border-left: 1px solid red;
 }
 
