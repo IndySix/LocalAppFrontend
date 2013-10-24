@@ -1,5 +1,6 @@
 //Global app varibale
-var api_url         = "http://145.89.96.87:8000/"
+var api_url         = "http://145.89.96.87:8000/";
+var score_item_count= 0;
 var challenge_id    = null;
 var user_playing    = null;
 var game_start_time = Math.round(new Date().getTime() / 2000);
@@ -100,11 +101,26 @@ function displayScore(level, player, score){
 
 //Add the score to the sidebar
 function addScoreToSidebar(level, player, score){
+  var parent    = document.getElementById("sidebar-content");
+  var firstChild  = parent.firstChild;
 
+  //Create score div element
+  var scoreDiv = document.createElement("div");
+  scoreDiv.innerHTML = level+" | "+player+" | "+score;
+
+  parent.insertBefore(scoreDiv, firstChild);
+  
+  score_item_count++;
+  cleanOldScoreSidebar();
 }
 
+//clear old score when list is bigger then 10
 function cleanOldScoreSidebar(){
-
+  var sidebarContent    = document.getElementById("sidebar-content");
+  if(score_item_count > 9){
+    sidebarContent.removeChild( sidebarContent.childNodes[ sidebarContent.childNodes.length - 1 ] );
+    score_item_count--; 
+  }
 }
 
 // Ajax class
