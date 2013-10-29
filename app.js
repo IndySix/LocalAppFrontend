@@ -1,5 +1,5 @@
 //Global app varibale
-var api_url         = "http://localhost/projecten/website/api/checkinUser/1234567890";
+var api_url         = "http://145.89.96.163:8000/";
 var user_playing    = null;
 var game_start_time = Math.round(new Date().getTime() / 2000);
 var timer_id        = 0;
@@ -15,7 +15,7 @@ function checkin(){
     displayChallenge();
     challenge_interval_id = window.setInterval( function(){challenge()},2000 );
   } else {
-    ajaxObject = new ajax(api_url)//+'user');
+    ajaxObject = new ajax(api_url+'user');
     ajaxObject.isPost = false;
     ajax.onReady = function() {
       try {
@@ -26,11 +26,11 @@ function checkin(){
       }
 
       if(jsend.status == "error") {
-          alert(jsend.message);
+          console.log("error: "+jsend.message);
           return;
         }
         if(jsend.status == "fail"){
-          alert(jsend.data);
+          console.log("Fail: "+jsend.data);
           return;
         }
         if(jsend.data != null)
@@ -45,7 +45,7 @@ window.setInterval( function(){checkin()},1000 );
 
 //Check if challenge is completed
 function challenge(){
-  ajaxObject = new ajax()//api_url+'challenge');
+  ajaxObject = new ajax(api_url+'challenge');
   ajaxObject.isPost = false;
   ajax.onReady = function() {
     try {
@@ -56,11 +56,11 @@ function challenge(){
     }
 
     if(jsend.status == "error") {
-        alert(jsend.message);
+        console.log("Error: "+jsend.message);
         return;
       }
       if(jsend.status == "fail"){
-        alert(jsend.data);
+        console.log("Fail: "+jsend.data);
         return;
       }
       if(jsend.data != null) {
@@ -173,6 +173,37 @@ function addScoreToSidebar(level, player, score){
   cleanOldScoreSidebar();
 }
 
+function getKing(){
+  ajaxObject = new ajax("http://localhost/projecten/website/api/getKingPart/Grind");
+  ajaxObject.isPost = false;
+  ajax.onReady = function() {
+    try {
+        var jsend = JSON.parse( ajaxObject.getText() );
+    } catch(e) {
+        console.log('getKing: invalid json');
+        return;
+    }
+
+    if(jsend.status == "error") {
+      console.log("Error: "+jsend.message);
+      return;
+    }
+    if(jsend.status == "fail"){
+      console.log("Fail: "+jsend.data);
+      return;
+    }
+    if(jsend.data != null){
+      //set data
+      document.getElementById('king-avatar').src = jsend.data.avatarUrl;
+      replaceHtmlElement("king-name", jsend.data.username);
+      replaceHtmlElement("king-score", jsend.data.score);
+      console.log(jsend.data);
+    }
+    console.log("test");
+  }
+  ajaxObject.send();
+}
+
 function getLatestScore(){
   ajaxObject = new ajax("http://localhost/projecten/website/api/latestResultsParts/grind")//+'user');
   ajaxObject.isPost = false;
@@ -180,7 +211,7 @@ function getLatestScore(){
     try {
         var jsend = JSON.parse( ajaxObject.getText() );
     } catch(e) {
-        console.log('checkin: invalid json');
+        console.log('getLatestScore: invalid json');
         return;
     }
 
