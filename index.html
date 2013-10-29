@@ -1,59 +1,145 @@
 <html>
 <head>
-	<title>Beat the King</title>
+	<title>Beat The King</title>
 	<meta name="viewport" content="width=device-width">
-	<link rel="stylesheet" href="style.css" type="text/css">
+	<link rel="stylesheet" type="text/css" href="style.css">
 	<script src="app.js"></script>
 </head>
 <body>
-<div id="score-popup">
-</div>
-<div id="main-wrapper">
-<!-- Begin Content -->
-	<div id="content">
-<!-- Begin Checkin-->
-		<div id="checkin">
-			<h1>Login</h1>
+<div id="background-checkin"></div>
+<div id="background-challenge"></div>
+
+<div id="content">
+<!-- Begin Checkin -->
+	<div id="checkin">
+		<div id="checkin-title">Beat The KING! <img src="img/kroon.png"></div>
+		<div id="checkin-content">
+			<h1>Check-in</h1>
+			<p>Houd je chip voor de paal</p>
 		</div>
-<!-- End Checkin-->
+	</div>
 <!-- Begin Challenge -->
-		<div id="challenge">
-			<div id="content-title">Username</div>
-			<div id="challenge-title"><span>1</span> Challenge titel</div>
-			<div id="challenge-content">
-			
-			<div id="description">
-				<p id="description-text">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempor arcu vitae cursus mollis. Nam interdum interdum nisl, a dapibus ante pellentesque non. Duis interdum gravida mi eu ultricies. Cras molestie sem et lorem viverra auctor. Ut congue felis elit, non imperdiet justo viverra in. Mauris tincidunt eros vel orci ullamcorper cursus. In condimentum lacus id tellus feugiat, et luctus arcu porta. Morbi sit amet luctus neque. Sed porta, dolor ac euismod iaculis, dui orci iaculis magna, et tempor eros velit eget est. Ut aliquet lorem nec ante malesuada, sit amet gravida metus consequat.
-				</p>
-					<video id="videoPlayer" controls>
-  					<source id="videoMp4" src="" type="video/mp4">
-  					<source id="videoOgg" src="" type="video/ogg">
- 					HTML video tag is not supported in your browser!
-				</video>
-			</div>	
-			
-			<div id="topScores">
-				<h3>Top scores</h3>
-				<div id="topScores-text"></div>
+	<div id="challenge">
+		<div id="profile">
+			<table cellspacing="0" cellpadding="0">
+				<tr>
+					<th>Profiel</th>
+					<th>Score</th>
+				</tr>
+				<tr>
+					<td><!-- profile info -->
+						<img id="profile-pic" src="tmp/4242.jpg">
+						<p>
+							<span id="profile-name">Nick</span><br/>
+							<span id="profile-status">Semi-pro</span>
+						</p>
+					</td>
+					<td><!-- score -->
+						<span id="profile-score">850</span>
+						<span class="markerfelt-webfont">pt</span>
+						<div id="profile-stars">
+							<img src="img/star_full.png">
+							<img src="img/star_empty.png">
+							<img src="img/star_empty.png">
+							<img src="img/star_empty.png">
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+<!-- Challenge info -->
+		<div id="challenge-info">
+			<table cellspacing="0" cellpadding="0">
+				<tr>
+					<th width="20%" class="text-center">Level</th>
+					<th width="40%">Challenge</th>
+					<th width="20%">Time</th>
+					<th width="20%" class="text-center">Poging</th>
+				</tr>
+				<tr>
+					<td id="challenge-level">1</td>
+					<td id="challenge-title">The Node Grind</td>
+					<td><img src="img/timer.png">
+						<span id="challenge-time">4:59</span></td>
+					<td id="challenge-attempt">3</td>
+				</tr>
+			</table>	
+		</div>
+<!-- Challenge extra info -->
+		<div id="challenge-info-extra">
+			<div class="left">
+				<div id="challenge-description">
+					<h1>Uitleg challenge</h1>
+					<p id="challenge-description-text">Aliquam metus massa, ultricies quis mi at, pharetra vestibulum mauris. Nulla dui est, sagittis ut velit eget, ullamcorper tempus orci. Nulla ac tellus faucibus dolor mattis vestibulum quis sit amet ipsum. Pellentesque posuere lorem ut nisl malesuada, rhoncus vehicula urna gravida. Vivamus gravida tincidunt arcu. In vel massa ut risus aliquet blandit. Morbi suscipit varius tortor posuere aliquet.</p>
+				</div>
+				<div id="challenge-video">
+					<div id="challenge-video-content">
+						<video id="videoPlayer" controls>
+	  						<source id="videoMp4" src="tmp/movie.mp4" type="video/mp4">
+	  						<source id="videoOgg" src="tmp/movie.ogg" type="video/ogg">
+	 						HTML video tag is not supported in your browser!
+						</video>
+						<h3>Hulp nodig?</h3>
+						<img src="img/buddy_button.png">
+						<p>Buddy</p>
+					</div>
+				</div>
 			</div>
-			
+			<div class="right">
+				<div id="challenge-topscore">
+					<h1>Top 10 scores</h1>
+					<div id="challenge-scores">
+						<p>
+							<span class="level-icon">1</span>
+							Jackie
+							<span class="score">3500 pt</span>
+						</p>
+					</div>
+				</div>
 			</div>
 		</div>
-<!-- End Challenge -->
 	</div>
-<!-- Begin Sidebar -->
-	<div id="sidebar">
-		<div id="sidebar-title">Recente Resultaten</div>
-		<div id="sidebar-content">
-			
-		</div>
-	</div>
-<!-- End Sidebar -->
 </div>
-</body>
-</html>
+<!-- Begin Sidebar -->
+<div id="sidebar">
+	<div id="separator"></div>
+	<div id="sidebar-title">
+		The KING!
+		<h1>Grind LOW</h1>
+	</div>
+	<div id="sidebar-king">
+			<img id="king-krown" src="img/kroon.png">
+			<img id="king-avatar"src="tmp/4242.jpg">
+			<p id="king-name">Nick</p>
+			<p id="king-score">850<span> pt</span></p>
+		</div>
+	<div id="sidebar-content">
+		<h1>Results Players</h1>
+		<div id="scores">
+			<!-- <p>
+				<span class="level-icon">1</span>
+				Jackie
+				<span class="score">3500 pt</span>
+			</p> -->
+		</div>
+	</div>
+</div>
 <script type="text/javascript">
 	//displayChallenge();
-	addScoreToSidebar(1, 'Krukas', 520);
+	getLatestScore();
+	// addScoreToSidebar(1, 'Krukas', 520);
+	// addScoreToSidebar(2, 'Krukas', 520);
+	// addScoreToSidebar(3, 'Krukas', 520);
+	// addScoreToSidebar(4, 'Krukas', 520);
+	// addScoreToSidebar(5, 'Krukas', 520);
+	// addScoreToSidebar(6, 'Krukas', 520);
+	// addScoreToSidebar(7, 'Krukas', 520);
+	// addScoreToSidebar(8, 'Krukas', 520);
+	// addScoreToSidebar(9, 'Krukas', 520);
+	// addScoreToSidebar(10, 'Krukas', 520);
+	// addScoreToSidebar(11, 'Krukas', 520);
+	// addScoreToSidebar(12, 'Krukas', 520);
+	// addScoreToSidebar(13, 'Krukas', 520);
 </script>
+</body>
+</html>

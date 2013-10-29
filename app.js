@@ -1,9 +1,8 @@
 //Global app varibale
-var api_url         = "http://145.89.96.50:8000/";
-var score_item_count= 0;
-var challenge_id    = null;
+var api_url         = "http://localhost/projecten/website/api/checkinUser/1234567890";
 var user_playing    = null;
 var game_start_time = Math.round(new Date().getTime() / 2000);
+var timer_id        = 0;
 var game_play_time  = 0;
 var challenge_interval_id = 0;
 
@@ -16,7 +15,7 @@ function checkin(){
     displayChallenge();
     challenge_interval_id = window.setInterval( function(){challenge()},2000 );
   } else {
-    ajaxObject = new ajax(api_url+'user');
+    ajaxObject = new ajax(api_url)//+'user');
     ajaxObject.isPost = false;
     ajax.onReady = function() {
       try {
@@ -36,7 +35,6 @@ function checkin(){
         }
         if(jsend.data != null)
           user_playing = jsend.data;
-          challenge_id
     }
     ajaxObject.send();
   }
@@ -47,8 +45,7 @@ window.setInterval( function(){checkin()},1000 );
 
 //Check if challenge is completed
 function challenge(){
-  //stop challenge interval id
-  ajaxObject = new ajax(api_url+'challenge');
+  ajaxObject = new ajax()//api_url+'challenge');
   ajaxObject.isPost = false;
   ajax.onReady = function() {
     try {
@@ -67,12 +64,17 @@ function challenge(){
         return;
       }
       if(jsend.data != null) {
-        window.clearInterval(challenge_interval_id);
-        //display score
-
         //add score
+        if(jsend.data >= 0) {
+          addScoreToSidebar(user_playing.level.levelScore, user_playing.username, jsend.data);
+        }
 
         //display chekin
+        displayCheckin();
+
+        //stop challenge interval id
+        window.clearInterval(challenge_interval_id);
+        challenge_interval_id = 0;
       }
   }
   ajaxObject.send();
@@ -84,6 +86,8 @@ function displayCheckin(){
   var challengeDiv  = document.getElementById("challenge");
   checkinDiv.style.display = "block";
   challengeDiv.style.display = "none";
+  document.getElementById('background-checkin').style.opacity = "100";
+  document.getElementById('background-challenge').style.opacity = "0";
 }
 
 //Displays the checkin challenge page/element
@@ -92,28 +96,58 @@ function displayChallenge(){
   var challengeDiv  = document.getElementById("challenge");
   var challenge     = user_playing.level;
 
-  replaceHtmlElement("content-title", user_playing.username);
-  replaceHtmlElement("challenge-title", "<span>"+challenge.order+"</span> "+challenge.title);
-  replaceHtmlElement("description-text", challenge.description);
+  document.getElementById('background-checkin').style.opacity = "0";
+  document.getElementById('background-challenge').style.opacity = "100";
+  //Profile 
+  document.getElementById("profile-pic").src = user_playing.avatarUrl;
+  replaceHtmlElement("profile-name", user_playing.username);
+  replaceHtmlElement("profile-score", user_playing.levelScore);
+  setStars(user_playing.levelScore);
+  
+  //Challenge info
+  replaceHtmlElement("challenge-level", challenge.levelNumb);
+  replaceHtmlElement("challenge-title", challenge.title);
+  replaceHtmlElement("challenge-attempt", user_playing.attempt);
+  game_start_time = (new Date().getTime()/1000)+challenge.playTime;
+  timer();
+  timer_id = window.setInterval(timer,1000 );
+
+  //Challenge extra info
+  replaceHtmlElement("challenge-description-text", challenge.description);
   
   var html = "";
   for (var i = 0; i < challenge.topScores.length; i++) {
-   challenge.topScores[i];
-   html += "<div><span>"+challenge.topScores[i].username+"</span> "+challenge.topScores[i].score+"</div>";
+   html += "<p><span class='level-icon'>"+(i+1)+"</span>";
+   html += challenge.topScores[i].username;
+   html += "<span class='score'>"+challenge.topScores[i].score+" pt</span></p>";
   };
-  replaceHtmlElement("topScores-text", html);
+  replaceHtmlElement("challenge-scores", html);
 
   //play video
-  // var videoMp4 = document.getElementById("videoMp4");
-  // videoMp4.src = videos[movie].mp4Url;
-  // var videoOgg = document.getElementById("videoOgg");
-  // videoOgg.src = videos[movie].oggUrl;
-  // var video = document.getElementById("videoPlayer");
-  // video.load();
-  // video.play();
+  var videoMp4 = document.getElementById("videoMp4");
+  videoMp4.src = challenge.mp4_url;
+  var videoOgg = document.getElementById("videoOgg");
+  videoOgg.src = challenge.ogg_url;
+  var video = document.getElementById("videoPlayer");
+  video.load();
+  video.play();
 
   checkinDiv.style.display = "none";
   challengeDiv.style.display = "block";
+}
+
+function setStars(score){
+  var challenge     = user_playing.level;
+  var html = "";
+  var scores = [challenge.one_star_score, challenge.two_star_score, challenge.three_star_score, challenge.four_star_score];
+  for (var i = 0; i < 4; i++) {
+    if(score >= scores[i]) {
+      html += "<img src='img/star_full.png'> ";
+    } else {
+      html += "<img src='img/star_empty.png'> ";
+    }
+  };
+  replaceHtmlElement("profile-stars", html);
 }
 
 //Displays the score popup
@@ -123,26 +157,56 @@ function displayScore(level, player, score){
 
 //Add the score to the sidebar
 function addScoreToSidebar(level, player, score){
-  var parent    = document.getElementById("sidebar-content");
+  var parent    = document.getElementById("scores");
   var firstChild  = parent.firstChild;
 
   //Create score div element
   var scoreDiv = document.createElement("div");
-  scoreDiv.innerHTML = level+" | "+player+" | "+score;
-
+  var html = "";
+  html += "<p><span class='level-icon'>"+level+"</span>";
+  html += player;
+  html += "<span class='score'>"+score+" pt</span></p>";
+  scoreDiv.innerHTML = html;
+  
   parent.insertBefore(scoreDiv, firstChild);
   
-  score_item_count++;
   cleanOldScoreSidebar();
+}
+
+function getLatestScore(){
+  ajaxObject = new ajax("http://localhost/projecten/website/api/latestResultsParts/grind")//+'user');
+  ajaxObject.isPost = false;
+  ajax.onReady = function() {
+    try {
+        var jsend = JSON.parse( ajaxObject.getText() );
+    } catch(e) {
+        console.log('checkin: invalid json');
+        return;
+    }
+
+    if(jsend.status == "error") {
+        alert(jsend.message);
+        return;
+      }
+      if(jsend.status == "fail"){
+        alert(jsend.data);
+        return;
+      }
+      if(jsend.data != null){
+        for (var i = jsend.data.length - 1; i >= 0; i--) {
+          console.log(jsend.data[i]);
+          addScoreToSidebar(jsend.data[i].level, jsend.data[i].username, jsend.data[i].score);
+        };
+      }
+  }
+  ajaxObject.send();
 }
 
 //clear old score when list is bigger then 10
 function cleanOldScoreSidebar(){
-  var sidebarContent    = document.getElementById("sidebar-content");
-  if(score_item_count > 9){
+  var sidebarContent    = document.getElementById("scores");
+  while(sidebarContent.childNodes.length > 10)
     sidebarContent.removeChild( sidebarContent.childNodes[ sidebarContent.childNodes.length - 1 ] );
-    score_item_count--; 
-  }
 }
 
 // Function for changing the innerHTML of element
@@ -153,6 +217,20 @@ function replaceHtmlElement(id, html){
     return true;
   }
   return false;
+}
+
+//Timer function
+function timer(){
+    var time = -Math.round((new Date().getTime()/1000)- game_start_time);
+    var node = document.getElementById("challenge-time");
+    if(time >= 0) {
+      minutes = Math.floor(time/60);
+      seconds = time%60;
+      node.innerHTML = minutes+':'+(seconds > 9 ? "" + seconds: "0" + seconds); 
+    } else {
+        node.innerHTML = "Time is up";
+        window.clearInterval(timer_id);
+    }
 }
 
 // Ajax class
