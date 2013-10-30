@@ -7,6 +7,7 @@ var game_play_time  = 0;
 var challenge_interval_id = 0;
 
 //Check if user has checkin and start challenge
+//----------------------------------------------------------------
 function checkin(){
   if(challenge_interval_id != 0)
     return;
@@ -17,9 +18,9 @@ function checkin(){
   } else {
     ajaxObject = new ajax(api_url+'user');
     ajaxObject.isPost = false;
-    ajax.onReady = function() {
+    ajaxObject.onReady = function() {
       try {
-          var jsend = JSON.parse( ajaxObject.getText() );
+          var jsend = JSON.parse( this.getText() );
       } catch(e) {
           console.log('checkin: invalid json');
           return;
@@ -44,12 +45,13 @@ function checkin(){
 window.setInterval( function(){checkin()},1000 );
 
 //Check if challenge is completed
+//----------------------------------------------------------------
 function challenge(){
   ajaxObject = new ajax(api_url+'challenge');
   ajaxObject.isPost = false;
-  ajax.onReady = function() {
+  ajaxObject.onReady = function() {
     try {
-        var jsend = JSON.parse( ajaxObject.getText() );
+        var jsend = JSON.parse( this.getText() );
     } catch(e) {
         console.log('challenge: invalid json');
         return;
@@ -81,6 +83,7 @@ function challenge(){
 }
 
 //Displays the chekin page/element
+//----------------------------------------------------------------
 function displayCheckin(){
   var checkinDiv    = document.getElementById("checkin");
   var challengeDiv  = document.getElementById("challenge");
@@ -91,6 +94,7 @@ function displayCheckin(){
 }
 
 //Displays the checkin challenge page/element
+//----------------------------------------------------------------
 function displayChallenge(){
   var checkinDiv    = document.getElementById("checkin");
   var challengeDiv  = document.getElementById("challenge");
@@ -136,6 +140,7 @@ function displayChallenge(){
   challengeDiv.style.display = "block";
 }
 
+//----------------------------------------------------------------
 function setStars(score){
   var challenge     = user_playing.level;
   var html = "";
@@ -151,11 +156,13 @@ function setStars(score){
 }
 
 //Displays the score popup
+//----------------------------------------------------------------
 function displayScore(level, player, score){
 
 }
 
 //Add the score to the sidebar
+//----------------------------------------------------------------
 function addScoreToSidebar(level, player, score){
   var parent    = document.getElementById("scores");
   var firstChild  = parent.firstChild;
@@ -173,12 +180,14 @@ function addScoreToSidebar(level, player, score){
   cleanOldScoreSidebar();
 }
 
+//----------------------------------------------------------------
 function getKing(){
   ajaxObject = new ajax("http://localhost/projecten/website/api/getKingPart/Grind");
   ajaxObject.isPost = false;
-  ajax.onReady = function() {
+  ajaxObject.onReady = function() {
+    console.log('getKing: run');
     try {
-        var jsend = JSON.parse( ajaxObject.getText() );
+        var jsend = JSON.parse( this.getText() );
     } catch(e) {
         console.log('getKing: invalid json');
         return;
@@ -199,17 +208,18 @@ function getKing(){
       replaceHtmlElement("king-score", jsend.data.score);
       console.log(jsend.data);
     }
-    console.log("test");
   }
   ajaxObject.send();
 }
 
+//----------------------------------------------------------------
 function getLatestScore(){
   ajaxObject = new ajax("http://localhost/projecten/website/api/latestResultsParts/grind")//+'user');
   ajaxObject.isPost = false;
-  ajax.onReady = function() {
+  ajaxObject.onReady = function() {
+    console.log('getLatestScore: run');
     try {
-        var jsend = JSON.parse( ajaxObject.getText() );
+        var jsend = JSON.parse( this.getText() );
     } catch(e) {
         console.log('getLatestScore: invalid json');
         return;
@@ -234,6 +244,7 @@ function getLatestScore(){
 }
 
 //clear old score when list is bigger then 10
+//----------------------------------------------------------------
 function cleanOldScoreSidebar(){
   var sidebarContent    = document.getElementById("scores");
   while(sidebarContent.childNodes.length > 10)
@@ -241,6 +252,7 @@ function cleanOldScoreSidebar(){
 }
 
 // Function for changing the innerHTML of element
+//----------------------------------------------------------------
 function replaceHtmlElement(id, html){
   var node = document.getElementById(id);
   if (node != null) {
@@ -251,6 +263,7 @@ function replaceHtmlElement(id, html){
 }
 
 //Timer function
+//----------------------------------------------------------------
 function timer(){
     var time = -Math.round((new Date().getTime()/1000)- game_start_time);
     var node = document.getElementById("challenge-time");
@@ -302,11 +315,11 @@ function ajax(urlp) {
   		} else {
   			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
   		}
-
+      var self = this;
   		xmlhttp.onreadystatechange = function(){
   			if (xmlhttp.readyState==4 && xmlhttp.status==200)
-  				ajax.onReady();
-  		}
+  				self.onReady();
+  		} 
 
   		if (this.isPost) {
   			post();
