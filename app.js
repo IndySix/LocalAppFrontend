@@ -1,10 +1,11 @@
 //Global app varibale
-var api_url         = "http://145.89.96.163:8000/";
+var api_url         = "http://backend.local:8000/";
 var user_playing    = null;
 var game_start_time = Math.round(new Date().getTime() / 2000);
 var timer_id        = 0;
 var game_play_time  = 0;
 var challenge_interval_id = 0;
+var part_name       = "Grind";
 
 //Check if user has checkin and start challenge
 //----------------------------------------------------------------
@@ -16,7 +17,7 @@ function checkin(){
     displayChallenge();
     challenge_interval_id = window.setInterval( function(){challenge()},2000 );
   } else {
-    ajaxObject = new ajax(api_url+'user');
+    ajaxObject = new ajax(api_url+'checkinUser');
     ajaxObject.isPost = false;
     ajaxObject.onReady = function() {
       try {
@@ -182,7 +183,7 @@ function addScoreToSidebar(level, player, score){
 
 //----------------------------------------------------------------
 function getKing(){
-  ajaxObject = new ajax("http://localhost/projecten/website/api/getKingPart/Grind");
+  ajaxObject = new ajax(api_url+'getKingPart/'+part_name);
   ajaxObject.isPost = false;
   ajaxObject.onReady = function() {
     console.log('getKing: run');
@@ -205,8 +206,7 @@ function getKing(){
       //set data
       document.getElementById('king-avatar').src = jsend.data.avatarUrl;
       replaceHtmlElement("king-name", jsend.data.username);
-      replaceHtmlElement("king-score", jsend.data.score);
-      console.log(jsend.data);
+      replaceHtmlElement("king-score", jsend.data.score+"<span> pt</span>");
     }
   }
   ajaxObject.send();
@@ -214,7 +214,7 @@ function getKing(){
 
 //----------------------------------------------------------------
 function getLatestScore(){
-  ajaxObject = new ajax("http://localhost/projecten/website/api/latestResultsParts/grind")//+'user');
+  ajaxObject = new ajax(api_url+'latestResultsParts/'+part_name);
   ajaxObject.isPost = false;
   ajaxObject.onReady = function() {
     console.log('getLatestScore: run');
@@ -226,16 +226,15 @@ function getLatestScore(){
     }
 
     if(jsend.status == "error") {
-        alert(jsend.message);
+         console.log("Error: "+jsend.message);
         return;
       }
       if(jsend.status == "fail"){
-        alert(jsend.data);
+        console.log("Fail: "+jsend.data);
         return;
       }
       if(jsend.data != null){
         for (var i = jsend.data.length - 1; i >= 0; i--) {
-          console.log(jsend.data[i]);
           addScoreToSidebar(jsend.data[i].level, jsend.data[i].username, jsend.data[i].score);
         };
       }

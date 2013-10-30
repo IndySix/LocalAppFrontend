@@ -362,6 +362,10 @@ th, td {
 	border-bottom: 1px solid #fff;
 	text-shadow: 2px 2px #000;
 }
+#score-title{
+	background-color: #231f20;
+	padding: 5px 10px;
+}
 #scores {
 	margin-top: 20px;
 	font-weight: bold;
