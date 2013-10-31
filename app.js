@@ -5,50 +5,57 @@ var game_start_time = Math.round(new Date().getTime() / 2000);
 var timer_id        = 0;
 var game_play_time  = 0;
 var challenge_interval_id = 0;
+var checkin_interval_id = 0;
 var part_name       = "Grind";
 
 //Check if user has checkin and start challenge
 //----------------------------------------------------------------
 function checkin(){
-  if(challenge_interval_id != 0)
+  console.log("Run Checkin");
+  if(challenge_interval_id != 0 || user_playing != null)
     return;
 
-  if(user_playing != null){
-    displayChallenge();
-    challenge_interval_id = window.setInterval( function(){challenge()},2000 );
-  } else {
-    ajaxObject = new ajax(api_url+'checkinUser');
-    ajaxObject.isPost = false;
-    ajaxObject.onReady = function() {
-      try {
-          var jsend = JSON.parse( this.getText() );
-      } catch(e) {
-          console.log('checkin: invalid json');
-          return;
-      }
-
-      if(jsend.status == "error") {
-          console.log("error: "+jsend.message);
-          return;
-        }
-        if(jsend.status == "fail"){
-          console.log("Fail: "+jsend.data);
-          return;
-        }
-        if(jsend.data != null)
-          user_playing = jsend.data;
+  ajaxObject = new ajax(api_url+'checkinUser');
+  ajaxObject.isPost = false;
+  ajaxObject.onReady = function() {
+    try {
+        var jsend = JSON.parse( this.getText() );
+    } catch(e) {
+        console.log('checkin: invalid json');
+        return;
     }
-    ajaxObject.send();
+
+    if(jsend.status == "error") {
+        //console.log("error: "+jsend.message);
+        return;
+      }
+      if(jsend.status == "fail"){
+        //console.log("Fail: "+jsend.data);
+        return;
+      }
+      if(jsend.data != null) {
+        if(user_playing != null)
+          return;
+
+        console.log("Checkin user");
+        window.clearInterval(checkin_interval_id);
+        user_playing = jsend.data;
+        displayChallenge();
+        challenge_interval_id = window.setInterval( function(){challenge()},2000 );
+      }
   }
+  ajaxObject.send();
+  
 }
 
 //timer for checkking if user has checkin
-window.setInterval( function(){checkin()},1000 );
+checkin_interval_id = window.setInterval( function(){checkin()},1000 );
 
 //Check if challenge is completed
 //----------------------------------------------------------------
 function challenge(){
-  ajaxObject = new ajax(api_url+'challenge');
+  console.log("Run Challenge");
+  ajaxObject = new ajax(api_url+'getChallengeStatus');
   ajaxObject.isPost = false;
   ajaxObject.onReady = function() {
     try {
@@ -59,17 +66,17 @@ function challenge(){
     }
 
     if(jsend.status == "error") {
-        console.log("Error: "+jsend.message);
+        //console.log("Error: "+jsend.message);
         return;
       }
       if(jsend.status == "fail"){
-        console.log("Fail: "+jsend.data);
+        //console.log("Fail: "+jsend.data);
         return;
       }
       if(jsend.data != null) {
         //add score
         if(jsend.data >= 0) {
-          addScoreToSidebar(user_playing.level.levelScore, user_playing.username, jsend.data);
+          addScoreToSidebar(user_playing.level.levelNumb, user_playing.username, jsend.data);
         }
 
         //display chekin
@@ -78,6 +85,8 @@ function challenge(){
         //stop challenge interval id
         window.clearInterval(challenge_interval_id);
         challenge_interval_id = 0;
+        user_playing = null;
+        checkin_interval_id = window.setInterval( function(){checkin()},1000 );
       }
   }
   ajaxObject.send();
@@ -195,11 +204,11 @@ function getKing(){
     }
 
     if(jsend.status == "error") {
-      console.log("Error: "+jsend.message);
+      //console.log("Error: "+jsend.message);
       return;
     }
     if(jsend.status == "fail"){
-      console.log("Fail: "+jsend.data);
+      //console.log("Fail: "+jsend.data);
       return;
     }
     if(jsend.data != null){
@@ -226,11 +235,11 @@ function getLatestScore(){
     }
 
     if(jsend.status == "error") {
-         console.log("Error: "+jsend.message);
+        //console.log("Error: "+jsend.message);
         return;
       }
       if(jsend.status == "fail"){
-        console.log("Fail: "+jsend.data);
+        //console.log("Fail: "+jsend.data);
         return;
       }
       if(jsend.data != null){
