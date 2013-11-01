@@ -115,6 +115,7 @@ function displayChallenge(){
   //Profile 
   document.getElementById("profile-pic").src = user_playing.avatarUrl;
   replaceHtmlElement("profile-name", user_playing.username);
+  replaceHtmlElement("profile-difficulty", user_playing.difficulty);
   replaceHtmlElement("profile-score", user_playing.levelScore > 0 ? user_playing.levelScore : 0);
   setStars(user_playing.levelScore);
   
